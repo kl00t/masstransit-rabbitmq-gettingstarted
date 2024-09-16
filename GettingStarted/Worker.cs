@@ -23,8 +23,11 @@ public class Worker : BackgroundService
         _logger.LogInformation($"Worker {nameof(Worker)} started.");
         while (!cancellationToken.IsCancellationRequested)
         {
-            await _bus.Publish(new Contracts.GettingStarted { Value = $"The time is {DateTimeOffset.Now}" }, cancellationToken);
-
+            var orderCode = Guid.NewGuid().ToString();
+            var orderShipped = new OrderShippedEvent(orderCode);
+            var envelope = new Contracts.Envelope(orderShipped);
+            await _bus.Publish(envelope, cancellationToken);
+            //await _bus.Publish(new Contracts.GettingStarted { Value = $"The time is {DateTimeOffset.Now}" }, cancellationToken);
             await Task.Delay(1000, cancellationToken);
         }
     }

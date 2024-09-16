@@ -1,7 +1,6 @@
-using MassTransit;
+using GettingStarted.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace GettingStarted;
@@ -17,36 +16,10 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddMassTransit(x =>
-                {
-                    x.SetKebabCaseEndpointNameFormatter();
-
-                    // By default, sagas are in-memory, but should be changed to a durable
-                    // saga repository.
-                    x.SetInMemorySagaRepositoryProvider();
-
-                    var entryAssembly = Assembly.GetEntryAssembly();
-
-                    x.AddConsumers(entryAssembly);
-                    x.AddSagaStateMachines(entryAssembly);
-                    x.AddSagas(entryAssembly);
-                    x.AddActivities(entryAssembly);
-
-                    //x.UsingInMemory((context, cfg) =>
-                    //{
-                    //    cfg.ConfigureEndpoints(context);
-                    //});
-                    x.UsingRabbitMq((context, cfg) =>
-                    {
-                        cfg.Host("localhost", "/", h => {
-                            h.Username("guest");
-                            h.Password("guest");
-                        });
-
-                        cfg.ConfigureEndpoints(context);
-                    });
-                });
-
+                services.AddHttpClients(hostContext.Configuration);
+                services.AddMassTransitService(hostContext.Configuration, useInMemory: false);
+                services.AddServices();
+                // This will be used to create items on the queue.
                 services.AddHostedService<Worker>();
             });
 }
