@@ -17,7 +17,7 @@ public class Program
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddHttpClients(hostContext.Configuration);
-                services.AddMassTransitService(hostContext.Configuration, useInMemory: false);
+                services.AddMassTransitService(hostContext.Configuration);
                 services.AddServices();
                 // This will be used to create items on the queue.
                 services.AddHostedService<Worker>();
