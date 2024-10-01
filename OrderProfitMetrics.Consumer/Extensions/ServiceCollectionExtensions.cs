@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderProfitMetrics.Consumer;
+using OrderProfitMetrics.Consumer.Consumers;
 using OrderProfitMetrics.Consumer.Serialization;
 using OrderProfitMetrics.Consumer.Services;
 using System;
@@ -34,6 +35,25 @@ public static class ServiceCollectionExtensions
                 });
 
                 cfg.ConfigureEndpoints(context);
+
+                cfg.ReceiveEndpoint(config["OrderShippedQueue"], e =>
+                {
+                    e.ClearSerialization();
+                    e.UseRawJsonSerializer();
+                    e.UseRawJsonDeserializer();
+
+                    // disable the default topic binding
+                    e.ConfigureConsumeTopology = false;
+                    e.PublishFaults = false;
+
+                    e.Bind(config["StatsmaniaExchange"], x =>
+                    {
+                        x.ExchangeType = "topic";
+                        x.RoutingKey = "order.shipped";
+                    });
+
+                    e.ConfigureConsumer<OrderShippedConsumer>(context);
+                });
 
                 cfg.UseMessageRetry(r => r.Exponential(
                     int.Parse(config["RetryCount"]),

@@ -29,16 +29,18 @@ public class OrderShippedConsumer : IConsumer<Envelope>
             var orderCode = context.Message.Payload.Code;
             var order = await _adminClient.GetOrderAsync(new OrderRequest(orderCode));
 
-            var statuses = order.StatusHistory.Select(s => s.Type).ToList();
+            _logger.LogInformation($"Consumed {order.Code} event.");
 
-            if (_orderProfitEligibilityService.IsEligible(order.CreatedAt, statuses, Status.SHIPPED_STATUS))
-            {
-                _logger.LogInformation($"Order {order.Code} eligible to push profit metrics");
-            }
-            else
-            {
-                _logger.LogInformation($"Order {order.Code} not eligible to push profit metrics");
-            };
+            //var statuses = order.StatusHistory.Select(s => s.Type).ToList();
+
+            //if (_orderProfitEligibilityService.IsEligible(order.CreatedAt, statuses, Status.SHIPPED_STATUS))
+            //{
+            //    _logger.LogInformation($"Order {order.Code} eligible to push profit metrics");
+            //}
+            //else
+            //{
+            //    _logger.LogInformation($"Order {order.Code} not eligible to push profit metrics");
+            //};
         }
         catch (Exception ex)
         {
