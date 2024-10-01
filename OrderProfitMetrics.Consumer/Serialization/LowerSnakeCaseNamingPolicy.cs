@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace GettingStarted.Serialization;
+namespace OrderProfitMetrics.Consumer.Serialization;
 
 public class LowerSnakeCaseNamingPolicy : JsonNamingPolicy
 {

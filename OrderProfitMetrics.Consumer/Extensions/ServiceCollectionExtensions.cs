@@ -1,11 +1,13 @@
-﻿using GettingStarted.Services;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OrderProfitMetrics.Consumer;
+using OrderProfitMetrics.Consumer.Serialization;
+using OrderProfitMetrics.Consumer.Services;
 using System;
 using System.Reflection;
 
-namespace GettingStarted.Extensions;
+namespace OrderProfitMetrics.Consumer.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -32,8 +34,20 @@ public static class ServiceCollectionExtensions
                 });
 
                 cfg.ConfigureEndpoints(context);
+
+                cfg.UseMessageRetry(r => r.Exponential(
+                    int.Parse(config["RetryCount"]),
+                    TimeSpan.FromSeconds(int.Parse(config["RetryMinIntervalSeconds"])),
+                    TimeSpan.FromSeconds(int.Parse(config["RetryMaxIntervalSeconds"])),
+                    TimeSpan.FromSeconds(int.Parse(config["RetryStartingIntervalSeconds"]))
+                ));
+
+                cfg.ConfigureJsonSerializerOptions(options =>
+                {
+                    options.PropertyNamingPolicy = new LowerSnakeCaseNamingPolicy();
+                    return options;
+                });
             });
-            
         });
     }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GettingStarted.Contracts;
+namespace OrderProfitMetrics.Consumer.Contracts;
 
 public static class ShippingStatus
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GettingStarted.Services;
+namespace OrderProfitMetrics.Consumer.Services;
 
 public interface IOrderProfitEligibilityService
 {

@@ -1,7 +1,7 @@
-﻿namespace GettingStarted.Contracts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
+namespace OrderProfitMetrics.Consumer.Contracts;
 public record OrderResponse(
     string Code,
     DateTime CreatedAt,

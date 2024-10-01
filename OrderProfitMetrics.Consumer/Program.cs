@@ -1,9 +1,9 @@
-using GettingStarted.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OrderProfitMetrics.Consumer.Extensions;
 using System.Threading.Tasks;
 
-namespace GettingStarted;
+namespace OrderProfitMetrics.Consumer;
 
 public class Program
 {
@@ -19,7 +19,6 @@ public class Program
                 services.AddHttpClients(hostContext.Configuration);
                 services.AddMassTransitService(hostContext.Configuration);
                 services.AddServices();
-                // This will be used to create items on the queue.
                 services.AddHostedService<Worker>();
             });
 }

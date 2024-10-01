@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GettingStarted;
+namespace OrderProfitMetrics.Consumer;
 
 public class Worker : BackgroundService
 {
@@ -24,10 +24,8 @@ public class Worker : BackgroundService
         while (!cancellationToken.IsCancellationRequested)
         {
             var orderCode = Guid.NewGuid().ToString();
-            var orderShipped = new OrderShippedEvent(orderCode);
-            var envelope = new Contracts.Envelope(orderShipped);
-            await _bus.Publish(envelope, cancellationToken);
-            //await _bus.Publish(new Contracts.GettingStarted { Value = $"The time is {DateTimeOffset.Now}" }, cancellationToken);
+            await _bus.Publish(new Contracts.Envelope(new OrderShippedEvent(orderCode)), cancellationToken);
+            _logger.LogInformation($"Published event {orderCode}");
             await Task.Delay(1000, cancellationToken);
         }
     }

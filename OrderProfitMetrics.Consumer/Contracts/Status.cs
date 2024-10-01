@@ -1,4 +1,4 @@
-﻿namespace GettingStarted.Contracts;
+﻿namespace OrderProfitMetrics.Consumer.Contracts;
 
 public record Status(string Type)
 {

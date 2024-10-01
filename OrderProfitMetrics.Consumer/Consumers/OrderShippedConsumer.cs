@@ -1,13 +1,12 @@
-﻿namespace GettingStarted.Consumers;
-
-using GettingStarted.Contracts;
-using GettingStarted.Services;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.Logging;
+using OrderProfitMetrics.Consumer.Contracts;
+using OrderProfitMetrics.Consumer.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+namespace OrderProfitMetrics.Consumer.Consumers;
 public class OrderShippedConsumer : IConsumer<Envelope>
 {
     private readonly ILogger<OrderShippedConsumer> _logger;
